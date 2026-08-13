@@ -1,6 +1,6 @@
 # 🛡️ ScamShield: Real Time Scam and Phishing Detection System
 
-ScamShield is an open source security platform designed to detect suspicious SMS messages, emails, phishing links, and malicious web pages in real time. It uses a configurable rule based engine along with optional integrations for Google Safe Browsing, VirusTotal, and Gemini AI.
+ScamShield is an open source security platform designed to detect suspicious SMS messages, emails, phishing links, and malicious web pages in real time. It uses a configurable rule based engine along with privacy preserving heuristics.
 
 The project includes a FastAPI backend, a modern React web dashboard, and a Chrome Extension (Manifest V3) for scanning web pages directly from your browser.
 
@@ -9,11 +9,11 @@ The project includes a FastAPI backend, a modern React web dashboard, and a Chro
 ## 🚀 Key Features
 
 * 🔍 **Smart Heuristic Engine**: Scans text and URLs against 12+ security rules including urgency patterns, credential requests, shorteners, and raw IP links.
-* 🛡️ **Multi Provider Reputation**: Option to cross-check URLs with Google Safe Browsing and VirusTotal APIs.
+* 🛡️ **Multi Layer Protection**: Evaluates domain structures, security flags, and URL patterns.
 * 🔐 **Privacy Preserving**: Sensitive numbers such as OTPs, PINs, and CVVs are automatically masked before saving or processing.
 * 📊 **Cybersecurity Dashboard**: Interactive web dashboard built with React and Vite to view threat analytics, paste messages, and review scan history.
 * 🧩 **Chrome Extension (Manifest V3)**: Inspect active web pages and links in one click with real time risk scores and human readable red flags.
-* ⚡ **Offline Friendly**: Works completely offline out of the box using local heuristic rules if external API keys are not configured.
+* ⚡ **Offline Friendly**: Works completely offline out of the box using local heuristic rules.
 
 ---
 
@@ -31,10 +31,11 @@ The project includes a FastAPI backend, a modern React web dashboard, and a Chro
                       │   (Python & SQLite)  │
                       └──────────┬───────────┘
                                  │
-              ┌──────────────────┼──────────────────┐
-              ▼                  ▼                  ▼
-      Local Heuristics     Google Safe        VirusTotal &
-        Rule Engine         Browsing API        Gemini AI
+                                 ▼
+                      ┌──────────────────────┐
+                      │    Local Heuristic   │
+                      │     Rule Engine      │
+                      └──────────────────────┘
 ```
 
 ---
@@ -51,7 +52,7 @@ scamshield/
 │   │   ├── models.py         # DB models
 │   │   ├── schemas.py        # Pydantic validation models
 │   │   ├── routes/           # API routes (analyze, scans, health)
-│   │   └── services/         # Rule engine, URL checker, AI explainer
+│   │   └── services/         # Rule engine and URL checker
 │   ├── tests/                # Test suite
 │   ├── requirements.txt      # Python dependencies
 │   └── .env.example          # Environment template
@@ -102,11 +103,6 @@ Create a `.env` file inside the `backend` directory based on `.env.example`:
 ```env
 DEBUG=True
 DATABASE_URL=sqlite:///./scamshield.db
-
-# Optional External API Keys (Leave blank to use local heuristic engine)
-GOOGLE_SAFE_BROWSING_API_KEY=
-VIRUSTOTAL_API_KEY=
-GEMINI_API_KEY=
 ```
 
 Start the FastAPI backend server:
@@ -157,7 +153,7 @@ curl -X POST "http://127.0.0.1:8000/api/analyze" \
 
 ## 🔒 Privacy and Security
 
-ScamShield masks sensitive numerical patterns such as OTPs, 4 to 6 digit verification codes, and credit card numbers before saving them to the database or passing them to third party services.
+ScamShield masks sensitive numerical patterns such as OTPs, 4 to 6 digit verification codes, and credit card numbers before saving them to the database or passing them to processing services.
 
 ---
 
