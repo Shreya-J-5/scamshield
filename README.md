@@ -1,129 +1,131 @@
-# ScamShield
+# 🛡️ ScamShield
 
-ScamShield is a web security and scam/phishing analysis Chrome extension backed by an asynchronous FastAPI analysis engine and a modern React web dashboard. It inspects active web pages in real-time, extracts threat signals, calculates explainable risk scores, and automatically suggests task-specific safer alternatives when a scanned website is suspicious or dangerous.
+> **Your AI-Powered Cybersecurity Companion for the Web**  
+> Real-time phishing scanner, security risk analyzer, and task-first safe alternative recommendation engine.
 
----
-
-## Overview
-
-ScamShield provides instant, transparent webpage risk assessments directly in your browser:
-- **Webpage & Message Scanning:** Analyzes active web pages, extracted links, titles, and text for phishing indicators, credential harvesting requests, urgency patterns, and raw IP links.
-- **Explainable Risk Scoring:** Computes a transparent 0–100 risk score, categorized into clear risk levels (`Low`, `Suspicious`, `High`, `Critical`), accompanied by itemized red flags.
-- **Task-First Safe Alternative Engine:** When a scanned website is determined to be high risk or suspicious, ScamShield identifies the website's primary functional purpose (e.g., PDF compression, URL shortening, file transfer) and recommends safer, verified web tools so users can accomplish their goals securely without risking malware or data theft.
-- **Privacy-First Design:** Masks sensitive verification numbers (OTPs, PINs, card numbers) locally before logging, and operates without tracking personal browsing history.
-
-*Note: ScamShield provides automated security risk assessments based on available signals and heuristics. No automated tool can guarantee 100% detection of every malicious website.*
+ScamShield protects you from shady websites, credential harvest traps, and malicious links before they can steal your data. Backed by a high-performance FastAPI backend, a sleek Chrome extension, and an intuitive React dashboard, ScamShield gives you instant security peace of mind while you browse.
 
 ---
 
-## Features
+## 🌟 Overview
 
-- **Real-Time Webpage Scanner:** Scan the current active tab with a single click.
-- **Explainable Security Signals:** View granular red flags (e.g. credential requests, prize promises, suspicious TLDs, IP-based URLs).
-- **Risk Score & Meter:** Visual progress meter and risk level badge (`Low`, `Suspicious`, `High`, `Critical`).
-- **Task-First Safer Alternatives:** Recommends verified alternatives matched by primary functional task (e.g. PDF compression, video editing, URL shortening) with zero-latency local fallback.
-- **Hard Anti-Generic AI Filter:** Excludes generic AI chatbots when recommending alternatives for specialized web tools.
-- **Interactive React Dashboard:** Manage scan history, view aggregated threat analytics, and run manual message analysis.
-- **FastAPI Backend Service:** Asynchronous backend providing REST API endpoints for security scanning, reputation checks, and task discovery.
+ScamShield gives you instant, transparent webpage security assessments right inside your browser:
+
+- 🔍 **Smart Webpage & Link Scanning:** Automatically inspects active web pages, titles, external links, and text for phishing indicators, urgency triggers, and raw IP addresses.
+- 📊 **Clear & Explainable Risk Scores:** Calculates a transparent 0–100 risk score with human-readable red flags and clear risk badges (`Low`, `Suspicious`, `High`, `Critical`).
+- 💡 **Task-First Safe Alternatives:** Found a shady PDF converter, video editor, or file transfer site? ScamShield detects what you were trying to do and automatically suggests verified, safe alternatives so you can finish your job securely.
+- 🔐 **Privacy-First Core:** Automatically masks sensitive numeric patterns (OTPs, PINs, card numbers) locally on your device. We never track your personal browsing history.
+
+> 💡 *Note: ScamShield provides automated risk assessments based on smart security heuristics. While it catches most online threats, no automated tool can guarantee 100% detection—always stay vigilant online!*
 
 ---
 
-## Architecture
+## ✨ Key Features
+
+- ⚡ **Instant Webpage Scanner:** Scan any open tab in 1 click from your Chrome toolbar.
+- 🎯 **Task-Matched Alternatives:** Automatically recommends trusted tools tailored to your exact task (PDF, video, images, file sharing, URL shortening).
+- 🛡️ **Zero-Latency Fallback Engine:** Built-in curated taxonomy ensures safe alternative suggestions even when offline or rate-limited.
+- 🚫 **Anti-Generic AI Filter:** Keeps generic AI chatbots out of your recommendations when you're looking for specialized web tools.
+- 🖥️ **Interactive Security Dashboard:** Review your scan history, view threat analytics, and manually analyze suspicious text messages or links.
+- 🚀 **Asynchronous Python Backend:** Powered by FastAPI for lightning-fast analysis and external threat intelligence lookup.
+
+---
+
+## 🏗️ Architecture Overview
 
 ```text
-Chrome Extension (Manifest V3)
+ Chrome Extension (Manifest V3)
         │
-        │ HTTPS (JSON API)
+        │ 🌐 HTTPS API Request
         ▼
-FastAPI Backend (Python)
+ FastAPI Backend (Python 3.10+)
         │
-        ├──► Security & Reputation Services (Google Safe Browsing, VirusTotal)
-        ├──► AI & Task Discovery Engine (Google Gemini API)
-        ├──► Local Fallback Engine (Curated Task Taxonomy)
-        └──► SQLite Database (Scans & Recommendation Cache)
+        ├──► 🛡️ Security Reputation (Google Safe Browsing, VirusTotal)
+        ├──► 🧠 AI Task Engine (Google Gemini API)
+        ├──► ⚡ Local Fallback Engine (Curated Task Taxonomy)
+        └──► 💾 Database Cache (SQLite / PostgreSQL)
 
-React Web Dashboard
+ React Web Dashboard
         │
         ▼
-FastAPI Backend (JSON API)
+ FastAPI Backend (JSON API)
 ```
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```text
 scamshield/
-├── backend/                  # FastAPI Application
+├── ⚙️ backend/                 # FastAPI Application & Security Engine
 │   ├── app/
-│   │   ├── main.py           # Entry point and CORS setup
-│   │   ├── config.py         # Application settings & environment variables
-│   │   ├── database.py       # SQLAlchemy SQLite configuration
-│   │   ├── models.py         # DB models (Scans & Cache)
-│   │   ├── schemas.py        # Pydantic data validation models
-│   │   ├── routes/           # API endpoints (analyze, scans, health)
+│   │   ├── main.py           # API routes & CORS middleware
+│   │   ├── config.py         # Environment configuration
+│   │   ├── database.py       # SQLAlchemy SQLite setup
+│   │   ├── models.py         # DB models (Scan History & Cache)
+│   │   ├── schemas.py        # Pydantic data validation
+│   │   ├── routes/           # Security endpoints (analyze, scans, health)
 │   │   └── services/         # Security rules, URL checker, alternatives engine
 │   ├── tests/                # Test suite
-│   ├── check_status.py       # API status checker
+│   ├── check_status.py       # API status health checker
 │   ├── test_task_specific.py # 8-category task recommendation test suite
 │   ├── requirements.txt      # Python dependencies
 │   └── .env.example          # Backend environment template
-├── extension/                # Chrome Extension (Manifest V3)
+├── 🧩 extension/               # Chrome Extension (Manifest V3)
 │   ├── manifest.json         # Extension manifest V3
-│   ├── background.js         # Background service worker
-│   ├── content.js            # Page content extractor script
+│   ├── background.js         # Service worker
+│   ├── content.js            # Page text extractor
 │   ├── popup.html            # Dark-theme popup interface
-│   ├── popup.css             # Cybersecurity theme stylesheet
-│   ├── popup.js              # Popup interaction controller
+│   ├── popup.css             # Cybersecurity design system
+│   ├── popup.js              # Popup controller logic
 │   └── icons/                # Extension branding icons
-├── frontend/                 # React Web Dashboard (Vite)
-│   ├── src/                  # React components, pages, and API service
-│   ├── package.json          # Frontend Node dependencies
-│   └── vite.config.js        # Vite build configuration
+├── 💻 frontend/                # React Web Dashboard (Vite + Tailwind)
+│   ├── src/                  # Components, pages, and API service
+│   ├── package.json          # Frontend dependencies
+│   └── vite.config.js        # Vite build config
+├── 🖼️ store_assets/           # Chrome Web Store graphics & screenshots
 ├── .env.example              # Global environment template
 ├── .gitignore                # Git ignore configuration
 ├── PRIVACY_POLICY.md         # Official Privacy Policy
-├── privacy_policy.html       # Hosted Privacy Policy page
+├── privacy_policy.html       # Web-formatted Privacy Policy page
 └── README.md                 # Project documentation
 ```
 
 ---
 
-## Technology Stack
+## 💻 Tech Stack
 
-### Backend
-- **Python 3.10+**
-- **FastAPI** (Asynchronous web framework)
-- **SQLAlchemy** (ORM)
-- **SQLite** (Development database)
-- **Pydantic** (Data validation)
+### 🐍 Backend
+- **Python 3.10+** & **FastAPI**
+- **SQLAlchemy** & **SQLite**
+- **Pydantic** validation
+- **Google Gemini API** & **VirusTotal API**
 
-### Browser Extension
+### 🧩 Chrome Extension
 - **Chrome Manifest V3**
-- **Vanilla JavaScript & CSS3** (Dark cybersecurity design system)
+- **Vanilla JavaScript & Modern CSS3** (Dark Studio Aesthetic)
 - **Service Workers & Content Scripts**
 
-### Frontend
-- **React 18**
-- **Vite**
+### ⚛️ Frontend
+- **React 18** & **Vite**
 - **Tailwind CSS**
-- **Lucide React** (Iconography)
+- **Lucide React** icons
 
 ---
 
-## Backend Setup
+## ⚙️ Backend Setup
 
-1. Navigate to the `backend` directory:
+1. 📂 Navigate to the backend folder:
    ```bash
    cd backend
    ```
 
-2. Create a virtual environment:
+2. 🐍 Create a virtual environment:
    ```bash
    python -m venv venv
    ```
 
-3. Activate the virtual environment:
+3. ⚡ Activate the environment:
    - **Windows (PowerShell):**
      ```powershell
      .\venv\Scripts\activate
@@ -133,12 +135,12 @@ scamshield/
      source venv/bin/activate
      ```
 
-4. Install dependencies:
+4. 📦 Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-5. Create your local environment configuration:
+5. 🔑 Setup environment variables:
    - **Windows:**
      ```cmd
      copy .env.example .env
@@ -148,37 +150,37 @@ scamshield/
      cp .env.example .env
      ```
 
-6. Open `backend/.env` and fill in your API keys (optional for basic local testing).
+6. Open `backend/.env` and add your API keys (optional for basic local heuristic scanning).
 
 ---
 
-## Environment Variables
+## 🔑 Environment Variables
 
 | Variable | Required | Description |
 |---|---|---|
-| `DEBUG` | No | Enables debug logging (`True` / `False`) |
-| `DATABASE_URL` | Yes | SQLite or PostgreSQL database connection string |
-| `GOOGLE_SAFE_BROWSING_API_KEY` | Optional | API key for Google Safe Browsing URL threat checks |
-| `VIRUSTOTAL_API_KEY` | Optional | API key for VirusTotal domain reputation scanning |
-| `GEMINI_API_KEY` | Optional | API key for Google Gemini task discovery & explanations |
+| `DEBUG` | No | Enable debug mode (`True` / `False`) |
+| `DATABASE_URL` | Yes | SQLite or PostgreSQL connection string |
+| `GOOGLE_SAFE_BROWSING_API_KEY` | Optional | Google Safe Browsing threat lookup |
+| `VIRUSTOTAL_API_KEY` | Optional | VirusTotal domain reputation scanning |
+| `GEMINI_API_KEY` | Optional | Google Gemini task discovery & explanations |
 
 ---
 
-## Running the Backend
+## 🏃‍♂️ Running the Backend
 
-Start the FastAPI development server:
+Start the FastAPI server:
 
 ```bash
 python -m uvicorn app.main:app --reload --port 8000
 ```
 
-The API will run at `http://localhost:8000`. API documentation is available at `http://localhost:8000/docs`.
+The API will be live at `http://localhost:8000`. Test endpoints anytime via the interactive Swagger Docs at `http://localhost:8000/docs` 🚀!
 
 ---
 
-## Frontend Setup
+## 🔌 Frontend Setup
 
-1. Navigate to the `frontend` directory:
+1. Navigate to the frontend folder:
    ```bash
    cd frontend
    ```
@@ -188,54 +190,45 @@ The API will run at `http://localhost:8000`. API documentation is available at `
    npm install
    ```
 
-3. Start the Vite development server:
+3. Start the dev server:
    ```bash
    npm run dev
    ```
 
-The dashboard will run at `http://localhost:5173`.
+Your dashboard will open at `http://localhost:5173` 🎨!
 
 ---
 
-## Chrome Extension Setup
+## 🧩 Chrome Extension Setup
 
-1. Open Google Chrome and navigate to `chrome://extensions`.
-2. Enable **Developer mode** using the toggle in the top-right corner.
-3. Click **Load unpacked** in the top-left corner.
-4. Select the `extension` folder inside this repository (`scamshield/extension`).
-5. Open any webpage in Chrome.
-6. Click the **ScamShield** icon in the extension toolbar.
-7. Click **Scan Active Page** to run a real-time security analysis.
+1. Open Google Chrome and go to `chrome://extensions`.
+2. Turn ON **Developer mode** (top right toggle).
+3. Click **Load unpacked** (top left).
+4. Select the `extension/` folder in this repository.
+5. Open any website and click the **ScamShield** icon in your toolbar to scan! 🛡️
 
 ---
 
-## Production Deployment
+## 🌐 Production Deployment
 
-In a production environment:
-- The **Chrome Extension** is published on the Chrome Web Store and communicates via HTTPS with your hosted backend API.
-- The **FastAPI Backend** is deployed to a cloud provider (e.g. Render, AWS, GCP, Railway) with environment variables securely set in the host settings.
-- All private API keys (Gemini, VirusTotal, Safe Browsing) remain on the backend and are never exposed to the client or browser extension.
-
----
-
-## Security
-
-- Private API credentials must be stored strictly in environment variables on the server.
-- `.env` files, local database files (`*.db`), and build artifacts are excluded via `.gitignore`.
-- The Chrome Extension contains zero private provider keys or database secrets.
-- In production, always use HTTPS for backend communications.
+- The **Chrome Extension** runs on the client's browser and communicates via secure HTTPS with your hosted backend API.
+- The **FastAPI Backend** can be deployed to Render, AWS, GCP, or Railway with environment variables set in your deployment portal.
+- All private API keys stay 100% on the server and are never exposed to the browser.
 
 ---
 
-## Privacy
+## 🔒 Security & Privacy
 
-ScamShield processes webpage content and extracted URLs only when a user initiates a scan or when real-time protection is active. Sensitive numerical strings (such as OTPs, PINs, and payment card numbers) are masked before data processing. ScamShield does not collect browsing history or personal identity information.
+- 🛡️ All API keys and secrets stay safely inside server environment variables.
+- 🙈 Sensitive numbers (OTPs, PINs, card numbers) are automatically masked before processing.
+- 🚫 We don't track your personal web history or sell user data.
+- 📑 Read our complete [Privacy Policy](PRIVACY_POLICY.md).
 
 ---
 
-## Testing
+## 🧪 Testing
 
-Run the automated task-specific category test suite:
+Run the automated task-specific recommendation test suite:
 
 ```bash
 cd backend
@@ -244,20 +237,12 @@ python test_task_specific.py
 
 ---
 
-## Chrome Web Store Publishing
-
-When packaging the extension for the Chrome Web Store:
-- Create a `.zip` archive containing **only** the contents of the `extension/` folder (`manifest.json`, `background.js`, `content.js`, `popup.html`, `popup.css`, `popup.js`, `icons/`).
-- Do **NOT** include `backend/`, `frontend/`, `node_modules/`, `.env`, or local database files.
-
----
-
-## License
+## 📄 License
 
 License has not yet been specified.
 
 ---
 
-## Disclaimer
+## ⚠️ Disclaimer
 
-ScamShield provides security risk assessments based on available signals and automated analysis. No automated security tool can guarantee that every website or message is completely safe or malicious. Always exercise caution when sharing sensitive information online.
+ScamShield provides security risk assessments based on automated signal analysis and heuristic rules. No automated security tool can guarantee 100% detection of every online scam or malicious site. Always practice safe browsing habits! 🛡️
