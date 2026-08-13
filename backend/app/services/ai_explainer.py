@@ -14,7 +14,7 @@ async def generate_ai_explanation(
     if not api_key:
         return None
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={api_key}"
     
     flag_summary = ", ".join([f"{f['rule']} ({f['points']} pts)" for f in red_flags])
     prompt = f"""

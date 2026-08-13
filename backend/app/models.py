@@ -17,3 +17,16 @@ class Scan(Base):
     recommendation = Column(Text, nullable=True)
     processing_time_ms = Column(Integer, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class RecommendationCache(Base):
+    __tablename__ = "recommendation_cache"
+
+    id = Column(Integer, primary_key=True, index=True)
+    domain = Column(String(255), unique=True, index=True, nullable=False)
+    purpose = Column(String(255), nullable=True)
+    category = Column(String(100), nullable=True)
+    alternatives_json = Column(Text, nullable=False)
+    provider_source = Column(String(50), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+

@@ -10,6 +10,26 @@ class URLReputationProvider(ABC):
         """Check a single URL and return dict: {"is_malicious": bool, "details": str, "provider": str}"""
         pass
 
+from urllib.parse import urlparse
+
+TRUSTED_DOMAINS = {
+    "chatgpt.com", "openai.com", "google.com", "github.com", "microsoft.com",
+    "apple.com", "amazon.com", "youtube.com", "linkedin.com", "twitter.com",
+    "x.com", "stackoverflow.com", "wikipedia.org", "reddit.com", "netflix.com",
+    "cloudflare.com", "zoom.us", "slack.com", "notion.so", "figma.com",
+    "canva.com", "dropbox.com", "spotify.com", "huggingface.co"
+}
+
+def is_trusted_domain(url: str) -> bool:
+    try:
+        netloc = urlparse(url).netloc.lower().split(":")[0]
+        for td in TRUSTED_DOMAINS:
+            if netloc == td or netloc.endswith("." + td):
+                return True
+    except Exception:
+        pass
+    return False
+
 class LocalHeuristicURLChecker(URLReputationProvider):
     SUSPICIOUS_TLDS = [".xyz", ".top", ".club", ".work", ".info", ".kim", ".gq", ".cf", ".tk", ".ml", ".ga"]
     SHORTENERS = ["bit.ly", "tinyurl.com", "t.co", "goo.gl", "is.gd", "buff.ly", "ow.ly", "rb.gy"]
@@ -17,6 +37,14 @@ class LocalHeuristicURLChecker(URLReputationProvider):
     async def check_url(self, url: str) -> Dict[str, Any]:
         url_lower = url.lower()
         reasons = []
+
+        # Skip heuristic flags if URL belongs to a verified trusted domain
+        if is_trusted_domain(url):
+            return {
+                "is_malicious": False,
+                "details": "Verified Official Trusted Domain",
+                "provider": "LocalHeuristics"
+            }
 
         # Check for IP address host
         if re.search(r"https?://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", url_lower):
@@ -47,6 +75,7 @@ class LocalHeuristicURLChecker(URLReputationProvider):
             "details": details,
             "provider": "LocalHeuristics"
         }
+
 
 class GoogleSafeBrowsingProvider(URLReputationProvider):
     async def check_url(self, url: str) -> Dict[str, Any]:

@@ -26,6 +26,32 @@ class RedFlag(BaseModel):
     explanation: str
     evidence: str
 
+class SafeAlternative(BaseModel):
+    name: str
+    url: str
+    explanation: str
+
+class AlternativeCard(BaseModel):
+    name: str
+    domain: str
+    url: str
+    description: str
+    reason: str
+    primary_task: Optional[str] = None
+    relevance_score: Optional[float] = 1.0
+    tags: List[str] = Field(default_factory=list)
+    category_label: Optional[str] = "Popular / Trusted"
+    confidence: Optional[float] = 1.0
+
+class AlternativesPayload(BaseModel):
+    primary_task: str
+    category: str
+    sub_category: Optional[str] = None
+    input_type: Optional[str] = None
+    output_type: Optional[str] = None
+    provider_source: str
+    alternatives: List[AlternativeCard] = Field(default_factory=list)
+
 class AnalyzeResponse(BaseModel):
     risk_score: int = Field(..., ge=0, le=100)
     risk_level: str
@@ -33,6 +59,8 @@ class AnalyzeResponse(BaseModel):
     red_flags: List[RedFlag]
     recommendation: str
     processing_time_ms: int
+    safe_alternative: Optional[SafeAlternative] = None
+    safer_alternatives_data: Optional[AlternativesPayload] = None
 
 class ScanOut(BaseModel):
     id: int

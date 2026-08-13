@@ -9,49 +9,120 @@
   <div class="popup-container">
     <header class="header">
       <div class="logo-group">
-        <svg class="shield-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-        <span class="brand-name">ScamShield</span>
+        <div class="logo-icon-wrap">
+          <svg class="shield-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <rect x="9.5" y="11" width="5" height="4.5" rx="1"/>
+            <path d="M10 11V9.5a2 2 0 1 1 4 0V11"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-name">ScamShield</span>
+          <span class="brand-sub">Security Assistant</span>
+        </div>
       </div>
-      <span class="badge-tag">MV3</span>
+      <div class="status-indicator" title="Protection Active">
+        <span class="pulse-dot"></span>
+        <span class="status-text">Active</span>
+      </div>
     </header>
 
     <main class="content">
       <div id="initial-state" class="state-card">
-        <p class="description">Scan the currently active webpage for potential phishing keywords, suspicious links, and security red flags.</p>
+        <div class="hero-intro">
+          <div class="intro-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+          <h3>Webpage Security Scanner</h3>
+          <p class="description">Instantly scan the active tab for phishing threats, suspicious links, and security red flags.</p>
+        </div>
+
         <button id="scan-btn" class="btn-primary">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          Scan Current Page
+          Scan Active Page
         </button>
       </div>
 
       <div id="loading-state" class="state-card hidden">
-        <div class="spinner"></div>
-        <p class="loading-text">Analyzing page content & links...</p>
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <p class="loading-text">Analyzing page content & links...</p>
+        </div>
       </div>
 
       <div id="result-state" class="state-card hidden">
-        <div class="result-header">
-          <div id="risk-badge" class="risk-badge">LOW</div>
-          <div class="score-group">
-            <span id="risk-score" class="score-val">0</span>
-            <span class="score-max">/100</span>
+        <div class="assessment-card" id="assessment-card">
+          <div class="assessment-top">
+            <div id="risk-badge" class="risk-badge">LOW</div>
+            <div class="score-display">
+              <span id="risk-score" class="score-val">0</span>
+              <span class="score-denom">/100</span>
+            </div>
+          </div>
+          
+          <div class="risk-meter">
+            <div id="risk-meter-fill" class="risk-meter-fill"></div>
+          </div>
+
+          <div class="assessment-info">
+            <h3 id="verdict-title" class="verdict-title">Probably Safe</h3>
+            <p id="recommendation-text" class="recommendation"></p>
           </div>
         </div>
 
-        <h3 id="verdict-title" class="verdict-title">Probably Safe</h3>
-        <p id="recommendation-text" class="recommendation"></p>
-
         <div class="red-flags-section">
-          <h4 class="flags-heading">Top Red Flags (<span id="flags-count">0</span>)</h4>
+          <div class="flags-header-row">
+            <h4 class="flags-heading">Security Signals</h4>
+            <span id="flags-count-badge" class="flags-count-badge"><span id="flags-count">0</span> signals</span>
+          </div>
           <div id="flags-list" class="flags-list"></div>
         </div>
 
-        <button id="rescan-btn" class="btn-secondary">Scan Again</button>
+        <div id="alternative-card" class="alternative-card hidden">
+          <div class="alt-header">
+            <svg class="alt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+            <span class="alt-badge">Recommended Safe Alternative</span>
+          </div>
+          <p id="alt-name" class="alt-name"></p>
+          <p id="alt-explanation" class="alt-explanation"></p>
+          <a id="alt-link" href="#" target="_blank" class="btn-alt">Visit Official Site ↗</a>
+        </div>
+
+        <div id="safer-alternatives-section" class="safer-alts-section hidden">
+          <div class="safer-alts-header">
+            <div class="safer-title-row">
+              <div class="safer-title-left">
+                <svg class="safer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <polyline points="9 12 11 14 15 10"/>
+                </svg>
+                <h4 class="safer-heading">Safer Alternatives</h4>
+              </div>
+              <span id="provider-badge" class="provider-badge">✦ AI Powered</span>
+            </div>
+            <p id="safer-subtext" class="safer-subtext">This website may not be safe. Here are some trusted alternatives that provide similar functionality.</p>
+            <div id="purpose-tag" class="purpose-tag">Purpose: <span id="purpose-text">Web Service</span></div>
+          </div>
+
+          <div id="safer-cards-list" class="safer-cards-list"></div>
+        </div>
+
+        <button id="rescan-btn" class="btn-secondary">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6"/>
+            <path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8M2.5 16l1 0.8A10 10 0 0 0 22 12.5"/>
+          </svg>
+          Re-scan Page
+        </button>
       </div>
 
       <div id="error-state" class="state-card hidden">
@@ -63,7 +134,9 @@
     </main>
 
     <footer class="footer">
-      <p>ScamShield Risk Assessment Tool</p>
+      <span>ScamShield v1.0</span>
+      <span class="dot">•</span>
+      <span>Real-time Protection</span>
     </footer>
   </div>
 

@@ -36,5 +36,16 @@ app.include_router(health.router)
 app.include_router(analyze.router, prefix="/api")
 app.include_router(scans.router, prefix="/api")
 
+@app.get("/")
+async def root():
+    return {
+        "name": "ScamShield API",
+        "status": "online",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "health": "/health"
+    }
+
+
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

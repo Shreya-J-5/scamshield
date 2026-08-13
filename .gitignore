@@ -1,18 +1,41 @@
+# Environment files
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+
+# Dependencies & Build artifacts
+node_modules/
+dist/
+build/
+.vite/
+*.zip
+
 # Python
 __pycache__/
 *.py[cod]
+*.pyo
 *$py.class
+.venv/
 venv/
-.env
+env/
+
+# Databases
 *.db
+*.sqlite
+*.sqlite3
 scamshield.db
 
-# Node
-node_modules/
-dist/
-.vite/
+# Logs & Temporary files
+*.log
+coverage/
+.cache/
+tmp/
+temp/
 
-# OS & Editors
-.DS_Store
+# OS & Editor files
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db

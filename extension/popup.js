@@ -14,10 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const riskBadge = document.getElementById('risk-badge');
   const riskScore = document.getElementById('risk-score');
+  const riskMeterFill = document.getElementById('risk-meter-fill');
   const verdictTitle = document.getElementById('verdict-title');
   const recommendationText = document.getElementById('recommendation-text');
   const flagsCount = document.getElementById('flags-count');
   const flagsList = document.getElementById('flags-list');
+
+  const alternativeCard = document.getElementById('alternative-card');
+  const altName = document.getElementById('alt-name');
+  const altExplanation = document.getElementById('alt-explanation');
+  const altLink = document.getElementById('alt-link');
+
+  const saferAltsSection = document.getElementById('safer-alternatives-section');
+  const providerBadge = document.getElementById('provider-badge');
+  const purposeText = document.getElementById('purpose-text');
+  const saferCardsList = document.getElementById('safer-cards-list');
 
   function showState(state) {
     initialState.classList.add('hidden');
@@ -26,6 +37,75 @@ document.addEventListener('DOMContentLoaded', () => {
     errorState.classList.add('hidden');
 
     state.classList.remove('hidden');
+  }
+
+  function renderSaferAlternatives(payload) {
+    if (!payload) {
+      saferAltsSection.classList.add('hidden');
+      return;
+    }
+
+    const providerMap = {
+      gemini: '✦ AI Powered',
+      cache: '⚡ Cached',
+      local_fallback: '🛡 Verified List'
+    };
+    providerBadge.textContent = providerMap[payload.provider_source] || '🛡 Verified List';
+    
+    const taskTitle = payload.primary_task || 'Task Processing';
+    const catLabel = payload.category ? ` (${payload.category}${payload.sub_category ? ' • ' + payload.sub_category : ''})` : '';
+    purposeText.textContent = `${taskTitle}${catLabel}`;
+
+    saferCardsList.innerHTML = '';
+
+    if (!payload.alternatives || payload.alternatives.length === 0) {
+      saferCardsList.innerHTML = `
+        <div class="safer-empty-state">
+          We couldn't confidently identify the exact service this website provides, so we don't want to suggest irrelevant alternatives.
+        </div>
+      `;
+      saferAltsSection.classList.remove('hidden');
+      return;
+    }
+
+    payload.alternatives.forEach(alt => {
+      // Validate HTTPS URL security
+      if (!alt.url || !alt.url.startsWith('https://')) return;
+
+      const card = document.createElement('div');
+      card.className = 'alt-card-item';
+
+      const tagEmojiMap = {
+        free: '🆓 Free',
+        fast: '⚡ Fast',
+        privacy: '🔒 Privacy',
+        trusted: '✓ Trusted'
+      };
+
+      const tagsHtml = (alt.tags || []).map(t => {
+        const lower = String(t).toLowerCase();
+        const label = tagEmojiMap[lower] || t;
+        return `<span class="tag-pill ${lower}">${label}</span>`;
+      }).join(' ');
+
+      card.innerHTML = `
+        <div class="alt-card-top">
+          <div class="alt-card-title-group">
+            <span class="alt-card-name">${alt.name}</span>
+            <span class="alt-card-domain">${alt.domain}</span>
+          </div>
+          <span class="trust-pill">${alt.category_label || '✓ Trusted'}</span>
+        </div>
+        <p class="alt-card-desc">${alt.description}</p>
+        ${alt.reason ? `<p class="alt-card-reason">Reason: ${alt.reason}</p>` : ''}
+        <div class="alt-card-tags">${tagsHtml}</div>
+        <a href="${alt.url}" target="_blank" rel="noopener noreferrer" class="btn-open-site">Open Website ↗</a>
+      `;
+
+      saferCardsList.appendChild(card);
+    });
+
+    saferAltsSection.classList.remove('hidden');
   }
 
   async function performScan() {
@@ -87,11 +167,24 @@ document.addEventListener('DOMContentLoaded', () => {
       verdictTitle.textContent = result.verdict;
       recommendationText.textContent = result.recommendation;
 
+      // Animate risk meter progress bar
+      if (riskMeterFill) {
+        const scorePercent = Math.min(100, Math.max(0, result.risk_score));
+        riskMeterFill.style.width = `${scorePercent}%`;
+        const colorMap = {
+          Low: '#16A36A',
+          Suspicious: '#D97706',
+          High: '#EA580C',
+          Critical: '#E5484D'
+        };
+        riskMeterFill.style.backgroundColor = colorMap[result.risk_level] || '#16A36A';
+      }
+
       flagsCount.textContent = result.red_flags.length;
       flagsList.innerHTML = '';
 
       if (result.red_flags.length === 0) {
-        flagsList.innerHTML = '<div style="font-size:11px; color:#34d399; padding:6px;">No security red flags detected on this page.</div>';
+        flagsList.innerHTML = '<div style="font-size:11px; color:#16A36A; padding:6px;">No security red flags detected on this page.</div>';
       } else {
         result.red_flags.forEach(flag => {
           const item = document.createElement('div');
@@ -102,6 +195,23 @@ document.addEventListener('DOMContentLoaded', () => {
           `;
           flagsList.appendChild(item);
         });
+      }
+
+      // Single alt card (backwards compatibility)
+      if (result.safe_alternative) {
+        altName.textContent = result.safe_alternative.name;
+        altExplanation.textContent = result.safe_alternative.explanation;
+        altLink.href = result.safe_alternative.url;
+        alternativeCard.classList.remove('hidden');
+      } else {
+        alternativeCard.classList.add('hidden');
+      }
+
+      // Rich Safer Alternatives Section
+      if (result.safer_alternatives_data) {
+        renderSaferAlternatives(result.safer_alternatives_data);
+      } else {
+        saferAltsSection.classList.add('hidden');
       }
 
       // Send badge update message to background worker

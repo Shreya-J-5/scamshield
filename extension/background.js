@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const { riskLevel } = message;
     if (riskLevel === 'High' || riskLevel === 'Critical') {
       chrome.action.setBadgeText({ text: '!' });
-      chrome.action.setBadgeBackgroundColor({ color: riskLevel === 'Critical' ? '#f43f5e' : '#f97316' });
+      chrome.action.setBadgeBackgroundColor({ color: '#E5484D' });
     } else {
       chrome.action.setBadgeText({ text: '' });
     }
