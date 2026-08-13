@@ -1,0 +1,60 @@
+rules:
+  - name: "Credential request"
+    points: 25
+    description: "Message asks for OTP, PIN, password, CVV, card number, or login credentials"
+    condition: 'any(word in message.lower() for word in ["otp", "pin", "password", "cvv", "card number", "login"])'
+
+  - name: "Urgent language"
+    points: 20
+    description: "Uses threatening or urgent phrasing"
+    condition: 'any(word in message.lower() for word in ["immediately", "asap", "urgent", "act now", "your account will be", "blocked today"])'
+
+  - name: "Shortened URL"
+    points: 20
+    description: "Contains common URL shortener domains"
+    condition: 'any(url.lower().startswith(prefix) for url in urls for prefix in ["https://bit.ly", "https://tinyurl.com", "https://t.co", "https://goo.gl"])'
+
+  - name: "IP address URL"
+    points: 20
+    description: "URL uses raw IP address instead of domain"
+    condition: 'any(re.search(r"https?://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", url) for url in urls)'
+
+  - name: "Suspicious characters in URL"
+    points: 15
+    description: "URL contains excessive subdomains, @ symbols, or misleading words"
+    condition: 'any("@" in url or url.count(".") > 3 or any(kw in url.lower() for kw in ["login", "secure", "account", "verify"]) for url in urls)'
+
+  - name: "Prize or reward promise"
+    points: 15
+    description: "Message promises a prize, refund, job, investment return, or free reward"
+    condition: 'any(word in message.lower() for word in ["won", "prize", "reward", "refund", "investment", "job offer", "free"])'
+
+  - name: "Fee request"
+    points: 15
+    description: "Message asks the user to pay a fee"
+    condition: 'any(word in message.lower() for word in ["fee", "charge", "pay now", "transfer money", "send cash"])'
+
+  - name: "Bypass security"
+    points: 10
+    description: "Asks user to bypass normal security procedures"
+    condition: 'any(phrase in message.lower() for phrase in ["ignore", "disable", "turn off", "turn off two-factor", "disable verification"])'
+
+  - name: "Sender domain mismatch"
+    points: 10
+    description: "Sender email domain does not match known organization (basic heuristic)"
+    condition: 'sender_contact and "@" in sender_contact and not any(domain in sender_contact.lower() for domain in ["gmail.com", "yahoo.com", "outlook.com"])'
+
+  - name: "Impersonation language"
+    points: 10
+    description: "Uses official-support or account-verification phrasing"
+    condition: 'any(word in message.lower() for word in ["official support", "account verification", "security team"])'
+
+  - name: "Non-HTTPS URL"
+    points: 10
+    description: "URL uses HTTP instead of HTTPS"
+    condition: 'any(url.lower().startswith("http://") for url in urls)'
+
+  - name: "Suspicious redirect/encoded URL"
+    points: 10
+    description: "URL contains encoded redirects or suspicious parameters"
+    condition: 'any("redirect" in url.lower() or "%2f" in url.lower() or "url=" in url.lower() for url in urls)'
